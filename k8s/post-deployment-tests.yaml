@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: post-deployment-tests
+spec:
+  template:
+    spec:
+      containers:
+      - name: post-deployment-tests
+        image: ${DOCKERHUB_USERNAME}/azureshield-iam-backend:${IMAGE_TAG}
+        command: ["pytest", "tests/integration/post_deployment/"]
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: azureshield-secrets
+              key: database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: azureshield-secrets
+              key: redis-url
+        - name: API_URL
+          value: "http://azureshield-iam-service:8000"
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+      restartPolicy: OnFailure
+      backoffLimit: 4 

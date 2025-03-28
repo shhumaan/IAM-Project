@@ -1,0 +1,105 @@
+name: CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'development') }}
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Azure CLI
+        uses: azure/setup-cli@v1
+        with:
+          version: latest
+          
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+          
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AKS_CLUSTER_NAME }}
+          
+      - name: Deploy to Kubernetes
+        run: |
+          # Update image tags in deployment files
+          sed -i "s|IMAGE_TAG|${{ github.sha }}|g" k8s/*.yaml
+          
+          # Apply database migrations
+          kubectl apply -f k8s/migrations.yaml
+          kubectl wait --for=condition=complete job/db-migration --timeout=300s
+          
+          # Deploy new version (blue)
+          kubectl apply -f k8s/deployment-blue.yaml
+          kubectl rollout status deployment/azureshield-iam-blue
+          
+          # Run post-deployment tests
+          kubectl apply -f k8s/post-deployment-tests.yaml
+          kubectl wait --for=condition=complete job/post-deployment-tests --timeout=300s
+          
+          # Switch traffic to new version (green)
+          kubectl apply -f k8s/service.yaml
+          
+          # Scale down old version
+          kubectl scale deployment azureshield-iam-green --replicas=0
+          
+      - name: Verify deployment
+        run: |
+          # Wait for pods to be ready
+          kubectl wait --for=condition=ready pod -l app=azureshield-iam --timeout=300s
+          
+          # Check application health
+          curl -f http://${{ secrets.APP_URL }}/api/v1/health || exit 1
+          
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          # Switch traffic back to old version
+          kubectl apply -f k8s/service-rollback.yaml
+          
+          # Scale down new version
+          kubectl scale deployment azureshield-iam-blue --replicas=0
+          
+          # Notify about rollback
+          echo "Deployment failed and was rolled back. Please check the logs for details."
+          
+      - name: Send deployment notification
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const status = '${{ job.status }}' === 'success';
+            const environment = '${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'development') }}';
+            
+            const message = status ? 
+              `✅ Successfully deployed to ${environment} environment!` : 
+              `❌ Deployment to ${environment} environment failed.`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            }); 

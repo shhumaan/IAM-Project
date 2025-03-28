@@ -1,0 +1,29 @@
+name: Generate Badges
+
+on:
+  workflow_run:
+    workflows: ["CI", "CD"]
+    types:
+      - completed
+
+jobs:
+  update-badges:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Generate Badges
+        uses: schneegans/dynamic-badges-action@1.0.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: ${{ secrets.BADGES_GIST_ID }}
+          filename: badges.json
+          label-1: CI
+          message-1: ${{ github.event.workflow_run.conclusion }}
+          color-1: ${{ github.event.workflow_run.conclusion == 'success' && 'green' || 'red' }}
+          label-2: CD
+          message-2: ${{ github.event.workflow_run.conclusion }}
+          color-2: ${{ github.event.workflow_run.conclusion == 'success' && 'green' || 'red' }}
+          label-3: Coverage
+          message-3: ${{ steps.coverage.outputs.coverage }}%
+          color-3: ${{ steps.coverage.outputs.coverage >= 80 && 'green' || 'red' }} 

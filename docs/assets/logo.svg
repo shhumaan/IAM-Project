@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Circle -->
+    <circle cx="100" cy="100" r="90" fill="#0078D4" opacity="0.1"/>
+    
+    <!-- Shield Shape -->
+    <path d="M100 20 L160 40 L160 100 C160 140 100 170 100 170 C100 170 40 140 40 100 L40 40 Z" 
+          fill="#0078D4" 
+          stroke="#0078D4" 
+          stroke-width="4"/>
+    
+    <!-- Lock Symbol -->
+    <path d="M85 80 L115 80 L115 100 C115 110 105 120 100 120 C95 120 85 110 85 100 Z" 
+          fill="white" 
+          stroke="white" 
+          stroke-width="2"/>
+    
+    <!-- Key Symbol -->
+    <path d="M90 90 L110 90 L110 100 L90 100 Z" 
+          fill="white" 
+          stroke="white" 
+          stroke-width="2"/>
+    
+    <!-- Text -->
+    <text x="100" y="160" 
+          font-family="Arial, sans-serif" 
+          font-size="16" 
+          fill="#0078D4" 
+          text-anchor="middle">
+        AzureShield IAM
+    </text>
+</svg> 
