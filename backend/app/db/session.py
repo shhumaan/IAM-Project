@@ -6,16 +6,14 @@ Handles database connection and session management.
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.pool import AsyncAdaptedQueuePool
+from sqlalchemy.pool import QueuePool
 
 from app.core.config import settings
 
-# Create async engine
-engine = create_async_engine(
+# Create an async engine
+async_engine = create_async_engine(
     settings.DATABASE_URL,
     echo=settings.DB_ECHO,
-    poolclass=AsyncAdaptedQueuePool,
     pool_size=settings.DB_POOL_SIZE,
     max_overflow=settings.DB_MAX_OVERFLOW,
     pool_timeout=settings.DB_POOL_TIMEOUT,
@@ -24,18 +22,26 @@ engine = create_async_engine(
 
 # Create async session factory
 AsyncSessionLocal = sessionmaker(
-    engine,
+    async_engine,
     class_=AsyncSession,
     expire_on_commit=False,
     autocommit=False,
     autoflush=False,
 )
 
+# Create a sync connection string by replacing asyncpg with psycopg2
+sync_db_url = settings.DATABASE_URL.replace("postgresql+asyncpg", "postgresql")
+
 # Create sync engine for migrations
 sync_engine = create_engine(
-    settings.DATABASE_URL,
+    sync_db_url,
     pool_pre_ping=True,
     echo=settings.DEBUG,
+    poolclass=QueuePool,
+    pool_size=settings.DB_POOL_SIZE,
+    max_overflow=settings.DB_MAX_OVERFLOW,
+    pool_timeout=settings.DB_POOL_TIMEOUT,
+    pool_recycle=settings.DB_POOL_RECYCLE,
 )
 
 # Create sync session factory
@@ -45,7 +51,7 @@ SessionLocal = sessionmaker(
     autoflush=False,
 )
 
-async def get_db():
+async def get_async_db():
     """Dependency for getting async database sessions."""
     async with AsyncSessionLocal() as session:
         try:
@@ -57,8 +63,12 @@ async def get_db():
         finally:
             await session.close()
 
+# Alias for get_async_db for backward compatibility
+get_db = get_async_db
+
 # Dependency to get sync DB session
-def get_db():
+def get_sync_db():
+    """Dependency for getting sync database sessions."""
     db = SessionLocal()
     try:
         yield db

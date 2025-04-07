@@ -25,9 +25,9 @@ class RoleInDB(RoleBase):
     updated_at: Optional[datetime] = None
     deleted_at: Optional[datetime] = None
 
-    class Config:
-        """Pydantic config."""
-        from_attributes = True
+    model_config = {
+        "from_attributes": True
+    }
 
 class Role(RoleInDB):
     """Schema for Role response."""

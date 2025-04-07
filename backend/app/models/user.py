@@ -5,8 +5,10 @@ from sqlalchemy import Boolean, Column, DateTime, Integer, String, ForeignKey, E
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.sql import func
 import enum
+from sqlalchemy.dialects.postgresql import UUID as PGUUID
 
-from app.db.base import BaseModel
+from app.db.base_class import Base
+from app.models.role import Role  # Import Role from its canonical location
 
 class UserStatus(str, enum.Enum):
     """User account status."""
@@ -19,12 +21,12 @@ class UserStatus(str, enum.Enum):
 # Association table for User-Role relationship
 user_role = Table(
     "user_role",
-    BaseModel.metadata,
+    Base.metadata,
     Column("user_id", String(36), ForeignKey("user.id"), primary_key=True),
-    Column("role_id", String(36), ForeignKey("role.id"), primary_key=True),
+    Column("role_id", String(36), ForeignKey("roles.id"), primary_key=True),
 )
 
-class User(BaseModel):
+class User(Base):
     """User model for AzureShield IAM."""
     __tablename__ = "user"
 
@@ -68,7 +70,7 @@ class UserSession(Base):
     __tablename__ = "user_sessions"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
     session_id = Column(String, unique=True, index=True)
     access_token = Column(String)
     refresh_token = Column(String)
@@ -80,59 +82,4 @@ class UserSession(Base):
     is_active = Column(Boolean, default=True)
 
     # Relationships
-    user = relationship("User", back_populates="sessions")
-
-class Role(Base):
-    __tablename__ = "roles"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True, nullable=False)
-    description = Column(String)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-
-    # Relationships
-    users = relationship("User", secondary=user_role, back_populates="roles")
-    permissions = relationship("Permission", secondary="role_permissions", back_populates="roles")
-
-class Permission(Base):
-    __tablename__ = "permissions"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True, nullable=False)
-    description = Column(String)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-
-    # Relationships
-    roles = relationship("Role", secondary="role_permissions", back_populates="permissions")
-
-class UserRole(Base):
-    __tablename__ = "user_roles"
-
-    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    role_id = Column(Integer, ForeignKey("roles.id"), primary_key=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-class RolePermission(Base):
-    __tablename__ = "role_permissions"
-
-    role_id = Column(Integer, ForeignKey("roles.id"), primary_key=True)
-    permission_id = Column(Integer, ForeignKey("permissions.id"), primary_key=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-class AuditLog(Base):
-    __tablename__ = "audit_logs"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    action = Column(String, nullable=False)
-    resource_type = Column(String)
-    resource_id = Column(String)
-    details = Column(String)
-    ip_address = Column(String)
-    user_agent = Column(String)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-    # Relationships
-    user = relationship("User", back_populates="audit_logs") 
+    user = relationship("User", back_populates="sessions") 

@@ -10,18 +10,27 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
+# Add python-dotenv import
+from dotenv import load_dotenv
+
 from alembic import context
 
 # Add the parent directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-# Import all models here
-from app.db.base import Base
-from app.models.user import User
-from app.models.role import Role
-from app.models.policy import Policy, PolicyVersion, PolicyAssignment
-from app.models.attribute import AttributeDefinition, AttributeValue
-from app.models.audit import AuditLog, AuditLogArchive, SecurityAlert, SystemMetric, HealthCheck
+# Import Base class
+from app.db.base_class import Base
+
+# Import all models here to make them visible to Alembic
+from app.models.user import User, UserSession, UserStatus
+# Comment out duplicates to avoid import errors
+# from app.models.role import Role, Permission
+# from app.models.policy import Policy, PolicyVersion, PolicyAssignment
+# from app.models.attribute import AttributeDefinition, AttributeValue
+# from app.models.audit import (
+#     AuditLog, AuditLogArchive, SecurityAlert, 
+#     SystemMetric, HealthCheck, AuditEventType, AuditEventSeverity
+# )
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -43,8 +52,27 @@ target_metadata = Base.metadata
 
 def get_url():
     """Get database URL from environment variables."""
-    from app.core.config import settings
-    return settings.DATABASE_URL
+    # Define the path to the root .env file relative to this script
+    dotenv_path = os.path.join(os.path.dirname(__file__), '..', '..', '.env')
+    
+    # Check if the .env file exists and load it
+    if os.path.exists(dotenv_path):
+        print(f"Loading environment variables from: {dotenv_path}")
+        load_dotenv(dotenv_path=dotenv_path)
+    else:
+        print(f"Warning: .env file not found at {dotenv_path}")
+
+    # Get DATABASE_URL from environment, raise error if not found
+    db_url = os.getenv("DATABASE_URL")
+    if not db_url:
+        raise ValueError("DATABASE_URL environment variable not set or .env file not loaded correctly.")
+    
+    # Ensure the URL uses the correct dialect for psycopg2 if needed by Alembic
+    if db_url.startswith("postgresql://"):
+        db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+        
+    print(f"Using database URL: {db_url[:db_url.find(':') + 1]}...hidden...@{db_url.split('@')[-1]}") # Hide credentials in output
+    return db_url
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.

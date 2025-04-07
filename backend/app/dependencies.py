@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.security import verify_token
-from app.db.session import get_db
+from app.db.session import AsyncSessionLocal, get_db as session_get_db
 from app.models.user import User
 from app.schemas.token import TokenPayload
 
@@ -62,10 +62,5 @@ async def get_current_active_superuser(
         )
     return current_user
 
-def get_db() -> Generator[AsyncSession, None, None]:
-    """Get database session."""
-    try:
-        db = AsyncSessionLocal()
-        yield db
-    finally:
-        db.close() 
+# Use the session get_db for consistency
+get_db = session_get_db 

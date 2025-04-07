@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.dependencies import get_current_active_superuser, get_current_user, get_db
 from app.models.policy import Policy
 from app.models.role import Role
+from app.models.user import User
 from app.schemas.policy import Policy as PolicySchema, PolicyCreate, PolicyUpdate
 
 router = APIRouter()

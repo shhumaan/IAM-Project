@@ -1,20 +1,29 @@
 """Models package for AzureShield IAM."""
-from app.models.user import User
-from app.models.role import Role
+from app.models.user import User, UserSession, UserStatus
+from app.models.role import Role, Permission
 from app.models.policy import Policy, PolicyVersion, PolicyAssignment
 from app.models.attribute import AttributeDefinition, AttributeValue
-from app.models.monitoring import AuditLog, SecurityAlert, SystemMetric, HealthCheck
+from app.models.audit import (
+    AuditLog, AuditLogArchive, SecurityAlert, 
+    SystemMetric, HealthCheck, AuditEventType, AuditEventSeverity
+)
 
 __all__ = [
     "User",
+    "UserSession",
+    "UserStatus",
     "Role",
+    "Permission",
     "Policy",
     "PolicyVersion",
     "PolicyAssignment",
     "AttributeDefinition",
     "AttributeValue",
     "AuditLog",
-    "SecurityAlert",
+    "AuditLogArchive",
+    "SecurityAlert", 
     "SystemMetric",
     "HealthCheck",
+    "AuditEventType",
+    "AuditEventSeverity",
 ] 

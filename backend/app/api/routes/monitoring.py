@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import desc, select, and_, func
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.api import deps
-from app.models.health import HealthCheck, SystemMetric, SecurityAlert, AuditLog
+from app.models.health import HealthCheck, SystemMetric
+from app.models.audit import AuditLog, SecurityAlert
 from app.models.monitoring import AccessLog
 from app.models.user import User
 from app.schemas.monitoring import (
@@ -29,8 +29,8 @@ router = APIRouter()
 @router.get("/health", response_model=HealthCheckResponse)
 async def check_health(
     background_tasks: BackgroundTasks,
-    db: Session = Depends(deps.get_db),
-    redis: Session = Depends(deps.get_redis)
+    db: Session = Depends(get_db),
+    redis: Session = Depends(get_redis)
 ):
     """Check the health status of all system components."""
     health_service = HealthService(db, redis)
@@ -41,7 +41,7 @@ async def get_metrics(
     metric_type: Optional[str] = None,
     start_time: Optional[datetime] = None,
     end_time: Optional[datetime] = None,
-    db: Session = Depends(deps.get_db)
+    db: Session = Depends(get_db)
 ):
     """Get system metrics with optional filtering."""
     query = db.query(SystemMetric)
@@ -62,7 +62,7 @@ async def get_alerts(
     severity: Optional[str] = None,
     start_time: Optional[datetime] = None,
     end_time: Optional[datetime] = None,
-    db: Session = Depends(deps.get_db)
+    db: Session = Depends(get_db)
 ):
     """Get security alerts with optional filtering."""
     query = db.query(SecurityAlert)
@@ -86,7 +86,7 @@ async def get_audit_logs(
     resource_type: Optional[str] = None,
     start_time: Optional[datetime] = None,
     end_time: Optional[datetime] = None,
-    db: Session = Depends(deps.get_db)
+    db: Session = Depends(get_db)
 ):
     """Get audit logs with optional filtering."""
     query = db.query(AuditLog)
@@ -108,8 +108,8 @@ async def get_audit_logs(
 
 @router.get("/status", response_model=SystemStatusResponse)
 async def get_system_status(
-    db: Session = Depends(deps.get_db),
-    redis: Session = Depends(deps.get_redis)
+    db: Session = Depends(get_db),
+    redis: Session = Depends(get_redis)
 ):
     """Get comprehensive system status including health, alerts, and metrics."""
     health_service = HealthService(db, redis)
@@ -142,8 +142,8 @@ async def get_system_status(
 @router.post("/alerts/{alert_id}/resolve", response_model=SecurityAlertResponse)
 async def resolve_alert(
     alert_id: int,
-    db: Session = Depends(deps.get_db),
-    current_user = Depends(deps.get_current_user)
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
 ):
     """Resolve a security alert."""
     alert = db.query(SecurityAlert).filter(SecurityAlert.id == alert_id).first()
@@ -176,8 +176,8 @@ async def resolve_alert(
 @router.post("/health-check", response_model=HealthCheckResponse)
 async def trigger_health_check(
     background_tasks: BackgroundTasks,
-    db: Session = Depends(deps.get_db),
-    redis: Session = Depends(deps.get_redis)
+    db: Session = Depends(get_db),
+    redis: Session = Depends(get_redis)
 ):
     """Trigger a manual health check."""
     health_service = HealthService(db, redis)
@@ -196,7 +196,7 @@ async def get_monitoring_config():
 
 @router.get("/stats", response_model=MonitoringStats)
 async def get_monitoring_stats(
-    db: Session = Depends(deps.get_db)
+    db: Session = Depends(get_db)
 ):
     """Get monitoring statistics."""
     # Get total counts
@@ -249,10 +249,9 @@ async def get_access_logs(
     end_date: Optional[datetime] = None,
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Retrieve access logs with filtering options."""
+    """Get access logs with optional filtering."""
     query = select(AccessLog)
     
-    # Apply filters
     if user_id:
         query = query.where(AccessLog.user_id == user_id)
     if resource_id:
@@ -263,20 +262,12 @@ async def get_access_logs(
         query = query.where(AccessLog.action == action)
     if status:
         query = query.where(AccessLog.status == status)
-    if start_date and end_date:
-        query = query.where(
-            and_(
-                AccessLog.timestamp >= start_date,
-                AccessLog.timestamp <= end_date
-            )
-        )
+    if start_date:
+        query = query.where(AccessLog.timestamp >= start_date)
+    if end_date:
+        query = query.where(AccessLog.timestamp <= end_date)
     
-    # Order by timestamp descending
-    query = query.order_by(AccessLog.timestamp.desc())
-    
-    # Apply pagination
     query = query.offset(skip).limit(limit)
-    
     result = await db.execute(query)
     access_logs = result.scalars().all()
     
@@ -289,9 +280,9 @@ async def create_access_log(
     access_log_in: AccessLogCreate,
     current_user: User = Depends(get_current_user),
 ) -> Any:
-    """Create new access log."""
+    """Create a new access log entry."""
     access_log = AccessLog(
-        user_id=access_log_in.user_id,
+        user_id=current_user.id,
         resource_id=access_log_in.resource_id,
         resource_type=access_log_in.resource_type,
         action=access_log_in.action,
@@ -300,14 +291,11 @@ async def create_access_log(
         user_agent=access_log_in.user_agent,
         details=access_log_in.details,
     )
-    
     db.add(access_log)
     await db.commit()
     await db.refresh(access_log)
-    
     return access_log
 
-# Audit Logs routes
 @router.get("/audit-logs", response_model=List[AuditLogSchema])
 async def get_audit_logs(
     db: AsyncSession = Depends(get_db),
@@ -321,10 +309,9 @@ async def get_audit_logs(
     end_date: Optional[datetime] = None,
     current_user: User = Depends(get_current_active_superuser),
 ) -> Any:
-    """Retrieve audit logs with filtering options."""
+    """Get audit logs with optional filtering."""
     query = select(AuditLog)
     
-    # Apply filters
     if user_id:
         query = query.where(AuditLog.user_id == user_id)
     if entity_id:
@@ -333,20 +320,12 @@ async def get_audit_logs(
         query = query.where(AuditLog.entity_type == entity_type)
     if action:
         query = query.where(AuditLog.action == action)
-    if start_date and end_date:
-        query = query.where(
-            and_(
-                AuditLog.timestamp >= start_date,
-                AuditLog.timestamp <= end_date
-            )
-        )
+    if start_date:
+        query = query.where(AuditLog.timestamp >= start_date)
+    if end_date:
+        query = query.where(AuditLog.timestamp <= end_date)
     
-    # Order by timestamp descending
-    query = query.order_by(AuditLog.timestamp.desc())
-    
-    # Apply pagination
     query = query.offset(skip).limit(limit)
-    
     result = await db.execute(query)
     audit_logs = result.scalars().all()
     
@@ -359,9 +338,9 @@ async def create_audit_log(
     audit_log_in: AuditLogCreate,
     current_user: User = Depends(get_current_active_superuser),
 ) -> Any:
-    """Create new audit log."""
+    """Create a new audit log entry."""
     audit_log = AuditLog(
-        user_id=audit_log_in.user_id,
+        user_id=current_user.id,
         entity_id=audit_log_in.entity_id,
         entity_type=audit_log_in.entity_type,
         action=audit_log_in.action,
@@ -369,67 +348,60 @@ async def create_audit_log(
         new_state=audit_log_in.new_state,
         details=audit_log_in.details,
     )
-    
     db.add(audit_log)
     await db.commit()
     await db.refresh(audit_log)
-    
     return audit_log
 
-# Metrics routes
 @router.get("/metrics/usage", response_model=UsageMetrics)
 async def get_usage_metrics(
     db: AsyncSession = Depends(get_db),
     days: int = Query(30, ge=1, le=365),
     current_user: User = Depends(get_current_active_superuser),
 ) -> Any:
-    """Get usage metrics for the system."""
-    # Calculate date range
-    end_date = datetime.utcnow()
-    start_date = end_date - timedelta(days=days)
+    """Get usage metrics for the specified number of days."""
+    start_date = datetime.utcnow() - timedelta(days=days)
     
-    # Total number of users
-    result = await db.execute(select(func.count()).select_from(User))
-    total_users = result.scalar_one()
-    
-    # Active users (users with access logs in the period)
-    result = await db.execute(
-        select(func.count(func.distinct(AccessLog.user_id)))
-        .where(AccessLog.timestamp >= start_date)
-    )
-    active_users = result.scalar_one()
-    
-    # Total access attempts
-    result = await db.execute(
-        select(func.count())
-        .select_from(AccessLog)
-        .where(AccessLog.timestamp >= start_date)
-    )
-    total_access_attempts = result.scalar_one()
-    
-    # Denied access attempts
-    result = await db.execute(
-        select(func.count())
-        .select_from(AccessLog)
-        .where(
-            and_(
-                AccessLog.timestamp >= start_date,
-                AccessLog.status == "denied"
-            )
+    # Get access log counts by day
+    access_log_counts = await db.execute(
+        select(
+            func.date_trunc('day', AccessLog.timestamp).label('day'),
+            func.count().label('count')
         )
+        .where(AccessLog.timestamp >= start_date)
+        .group_by('day')
+        .order_by('day')
     )
-    denied_access_attempts = result.scalar_one()
+    access_log_counts = access_log_counts.all()
     
-    # Success rate
-    success_rate = 0
-    if total_access_attempts > 0:
-        success_rate = ((total_access_attempts - denied_access_attempts) / total_access_attempts) * 100
+    # Get audit log counts by day
+    audit_log_counts = await db.execute(
+        select(
+            func.date_trunc('day', AuditLog.timestamp).label('day'),
+            func.count().label('count')
+        )
+        .where(AuditLog.timestamp >= start_date)
+        .group_by('day')
+        .order_by('day')
+    )
+    audit_log_counts = audit_log_counts.all()
+    
+    # Get alert counts by day
+    alert_counts = await db.execute(
+        select(
+            func.date_trunc('day', SecurityAlert.timestamp).label('day'),
+            func.count().label('count')
+        )
+        .where(SecurityAlert.timestamp >= start_date)
+        .group_by('day')
+        .order_by('day')
+    )
+    alert_counts = alert_counts.all()
     
     return UsageMetrics(
-        total_users=total_users,
-        active_users=active_users,
-        total_access_attempts=total_access_attempts,
-        denied_access_attempts=denied_access_attempts,
-        success_rate=success_rate,
-        time_period_days=days,
+        access_log_counts=access_log_counts,
+        audit_log_counts=audit_log_counts,
+        alert_counts=alert_counts,
+        start_date=start_date,
+        end_date=datetime.utcnow()
     ) 

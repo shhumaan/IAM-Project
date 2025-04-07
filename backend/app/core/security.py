@@ -8,12 +8,21 @@ from pyotp import TOTP
 import hashlib
 import hmac
 
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from pydantic import ValidationError
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.core.config import settings
+from app.db.session import get_sync_db
 from app.models.user import User
 from app.schemas.token import TokenPayload
 
 # Password hashing context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# OAuth2 token scheme
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a password against its hash."""
@@ -116,7 +125,7 @@ def generate_session_id() -> str:
 
 async def get_current_user(
     token: str = Depends(oauth2_scheme),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_sync_db)
 ) -> User:
     try:
         payload = jwt.decode(

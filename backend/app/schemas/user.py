@@ -1,62 +1,62 @@
 """Pydantic schemas for User model."""
 from typing import Optional, List
-from pydantic import BaseModel, EmailStr, constr, Field
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 from uuid import UUID
 
 from app.models.user import UserStatus
+from app.schemas.role import Role  # Assuming Role schema is defined elsewhere
 
 class UserBase(BaseModel):
     """Base schema for User."""
-    email: EmailStr
-    first_name: str
-    last_name: str
-    is_active: bool = True
+    email: Optional[EmailStr] = None
+    is_active: Optional[bool] = True
     is_superuser: bool = False
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    status: Optional[UserStatus] = None
+    email_verified: bool = False
+    
+    # Pydantic V2 configuration
+    model_config = {
+        "from_attributes": True
+    }
 
 class UserCreate(UserBase):
     """Schema for creating a new user."""
+    email: EmailStr
     password: str = Field(..., min_length=8)
 
-class UserUpdate(BaseModel):
+class UserUpdate(UserBase):
     """Schema for updating a user."""
-    email: Optional[EmailStr] = None
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
-    is_active: Optional[bool] = None
-    is_superuser: Optional[bool] = None
     password: Optional[str] = Field(None, min_length=8)
 
-class UserInDB(UserBase):
-    """Schema for User in database."""
-    id: UUID
-    mfa_enabled: bool
-    mfa_secret: Optional[str] = None
-    created_at: datetime
+class UserPasswordUpdate(BaseModel):
+    """Schema for updating user password."""
+    current_password: str
+    new_password: str = Field(..., min_length=8)
+
+class UserInDBBase(UserBase):
+    id: Optional[UUID] = None
+    created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
-    deleted_at: Optional[datetime] = None
+    
+    # Pydantic V2 configuration
+    model_config = {
+        "from_attributes": True
+    }
 
-    class Config:
-        """Pydantic config."""
-        from_attributes = True
+class UserInDB(UserInDBBase):
+    """Schema for User in database."""
+    hashed_password: str
 
-class User(UserInDB):
+class User(UserInDBBase):
     """Schema for User response."""
-    pass
+    roles: List[Role] = []
 
 class UserWithRoles(User):
     """Schema for User with roles."""
     roles: List["Role"] = []
-
-class UserInDBBase(UserBase):
-    id: Optional[int] = None
-    status: Optional[UserStatus] = None
-    email_verified: bool = False
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
 
 class UserCreateResponse(UserInDBBase):
     message: str = "User created successfully"
@@ -65,6 +65,7 @@ class UserCreateResponse(UserInDBBase):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+    otp_code: Optional[str] = None # Optional OTP code for MFA
 
 class UserLoginResponse(UserInDBBase):
     access_token: str
@@ -76,7 +77,7 @@ class PasswordReset(BaseModel):
 
 class PasswordResetConfirm(BaseModel):
     token: str
-    new_password: constr(min_length=8)
+    new_password: str = Field(..., min_length=8)
 
 class EmailVerification(BaseModel):
     token: str
@@ -86,22 +87,22 @@ class UserSession(BaseModel):
     id: int
     user_id: UUID
     session_id: str
-    ip_address: str
-    user_agent: str
+    ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
     created_at: datetime
     expires_at: datetime
     last_activity: Optional[datetime] = None
     is_active: bool
 
-    class Config:
-        """Pydantic config."""
-        from_attributes = True
+    model_config = {
+        "from_attributes": True
+    }
 
 class UserSessionCreate(BaseModel):
-    ip_address: str
-    user_agent: str
+    user_id: UUID
+    session_id: str
     expires_at: datetime
 
 class UserSessionUpdate(BaseModel):
-    last_activity: datetime
-    is_active: bool 
+    last_activity: Optional[datetime] = None
+    is_active: Optional[bool] = None 

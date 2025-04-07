@@ -1,17 +1,20 @@
 """Attribute models for AzureShield IAM."""
 from typing import List, Optional
+from uuid import UUID, uuid4
 
 from sqlalchemy import Boolean, Column, ForeignKey, String
+from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import relationship
 
-from app.db.base import BaseModel
+from app.db.base_class import Base
 
 
-class AttributeDefinition(BaseModel):
+class AttributeDefinition(Base):
     """Attribute definition model for ABAC."""
     
     __tablename__ = "attribute_definition"
     
+    id = Column(PGUUID, primary_key=True, default=uuid4)
     name = Column(String(255), unique=True, nullable=False, index=True)
     description = Column(String(255), nullable=True)
     data_type = Column(String(50), nullable=False)  # e.g., "string", "number", "boolean"
@@ -27,13 +30,14 @@ class AttributeDefinition(BaseModel):
         return f"<AttributeDefinition {self.name}>"
 
 
-class AttributeValue(BaseModel):
+class AttributeValue(Base):
     """Attribute value model for ABAC."""
     
     __tablename__ = "attribute_value"
     
-    attribute_def_id = Column(String(36), ForeignKey("attribute_definition.id"), nullable=False, index=True)
-    user_id = Column(String(36), ForeignKey("user.id"), nullable=True, index=True)
+    id = Column(PGUUID, primary_key=True, default=uuid4)
+    attribute_def_id = Column(PGUUID, ForeignKey("attribute_definition.id"), nullable=False, index=True)
+    user_id = Column(PGUUID, ForeignKey("user.id"), nullable=True, index=True)
     value = Column(String(255), nullable=False)
     
     # Relationships

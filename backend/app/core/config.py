@@ -1,11 +1,19 @@
 """Core configuration module for AzureShield IAM."""
-from typing import List, Dict, Any, Optional
-from pydantic import BaseSettings, PostgresDsn, validator, AnyHttpUrl
+from typing import List, Dict, Any, Optional, Union
+from pydantic import PostgresDsn, field_validator, AnyHttpUrl, Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 import os
 from pathlib import Path
 
 class Settings(BaseSettings):
     """Application settings."""
+    model_config = SettingsConfigDict(
+        case_sensitive=True,
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="allow"
+    )
+
     # API Settings
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "AzureShield IAM"
@@ -14,7 +22,7 @@ class Settings(BaseSettings):
     # CORS Settings
     CORS_ORIGINS: List[AnyHttpUrl] = []
     
-    @validator("CORS_ORIGINS", pre=True)
+    @field_validator("CORS_ORIGINS", mode="before")
     def assemble_cors_origins(cls, v: str | List[str]) -> List[str] | str:
         """Assemble CORS origins."""
         if isinstance(v, str) and not v.startswith("["):
@@ -24,25 +32,30 @@ class Settings(BaseSettings):
         raise ValueError(v)
     
     # Database Settings
-    POSTGRES_SERVER: str
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
+    POSTGRES_SERVER: str = Field(..., description="PostgreSQL server host")
+    POSTGRES_USER: str = Field(..., description="PostgreSQL username")
+    POSTGRES_PASSWORD: str = Field(..., description="PostgreSQL password")
+    POSTGRES_DB: str = Field(..., description="PostgreSQL database name")
     SQLALCHEMY_DATABASE_URI: Optional[str] = None
     DATABASE_URL: Optional[str] = None
     
-    @validator("SQLALCHEMY_DATABASE_URI", pre=True)
-    def assemble_db_connection(cls, v: Optional[str], values: dict) -> str:
+    @field_validator("SQLALCHEMY_DATABASE_URI", mode="before")
+    def assemble_db_connection(cls, v: Optional[str], info: Dict[str, Any]) -> str:
         """Assemble database connection string."""
         if isinstance(v, str):
             return v
+        values = info.data
         return f"postgresql://{values.get('POSTGRES_USER')}:{values.get('POSTGRES_PASSWORD')}@{values.get('POSTGRES_SERVER')}/{values.get('POSTGRES_DB')}"
     
-    @validator("DATABASE_URL", pre=True)
-    def assemble_db_url(cls, v: Optional[str], values: dict) -> str:
+    @field_validator("DATABASE_URL", mode="before")
+    def assemble_db_url(cls, v: Optional[str], info: Dict[str, Any]) -> str:
         """Assemble database URL."""
         if isinstance(v, str):
+            # If it doesn't already have a +asyncpg part, add it for async operations
+            if '+asyncpg' not in v and v.startswith('postgresql://'):
+                return v.replace('postgresql://', 'postgresql+asyncpg://')
             return v
+        values = info.data
         return f"postgresql+asyncpg://{values.get('POSTGRES_USER')}:{values.get('POSTGRES_PASSWORD')}@{values.get('POSTGRES_SERVER')}/{values.get('POSTGRES_DB')}"
     
     # Database Pool Settings
@@ -53,7 +66,7 @@ class Settings(BaseSettings):
     DB_ECHO: bool = False
     
     # Security Settings
-    SECRET_KEY: str
+    SECRET_KEY: str = Field(..., description="Secret key for JWT token generation")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
     ALGORITHM: str = "HS256"
@@ -198,25 +211,21 @@ class Settings(BaseSettings):
     AZURE_AD_CLIENT_SECRET: Optional[str] = None
     AZURE_AD_AUTHORITY: Optional[str] = None
 
-    @validator("AZURE_AD_AUTHORITY", pre=True)
-    def assemble_azure_authority(cls, v: Optional[str], values: dict) -> Optional[str]:
+    @field_validator("AZURE_AD_AUTHORITY", mode="before")
+    def assemble_azure_authority(cls, v: Optional[str], info: Dict[str, Any]) -> Optional[str]:
         if isinstance(v, str):
             return v
+        values = info.data
         return f"https://login.microsoftonline.com/{values.get('AZURE_AD_TENANT_ID')}"
 
     # Email Configuration
     SMTP_TLS: bool = True
     SMTP_PORT: int = 587
-    SMTP_HOST: str
-    SMTP_USER: str
-    SMTP_PASSWORD: str
-    EMAILS_FROM_EMAIL: str
-    EMAILS_FROM_NAME: str
-
-    class Config:
-        """Pydantic config."""
-        case_sensitive = True
-        env_file = ".env"
+    SMTP_HOST: str = Field(..., description="SMTP server host")
+    SMTP_USER: str = Field(..., description="SMTP username")
+    SMTP_PASSWORD: str = Field(..., description="SMTP password")
+    EMAILS_FROM_EMAIL: str = Field(..., description="Email address to send from")
+    EMAILS_FROM_NAME: str = Field(..., description="Name to send emails from")
 
 # Create global settings instance
 settings = Settings() 

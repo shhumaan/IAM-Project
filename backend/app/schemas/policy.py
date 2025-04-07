@@ -35,9 +35,9 @@ class PolicyInDB(PolicyBase):
     updated_at: Optional[datetime] = None
     deleted_at: Optional[datetime] = None
 
-    class Config:
-        """Pydantic config."""
-        from_attributes = True
+    model_config = {
+        "from_attributes": True
+    }
 
 class Policy(PolicyInDB):
     """Schema for Policy response."""
@@ -59,9 +59,9 @@ class PolicyVersionInDB(PolicyVersionBase):
     created_at: datetime
     created_by: UUID
 
-    class Config:
-        """Pydantic config."""
-        from_attributes = True
+    model_config = {
+        "from_attributes": True
+    }
 
 class PolicyVersion(PolicyVersionInDB):
     """Schema for PolicyVersion response."""
@@ -83,9 +83,9 @@ class PolicyAssignmentInDB(PolicyAssignmentBase):
     created_at: datetime
     created_by: UUID
 
-    class Config:
-        """Pydantic config."""
-        from_attributes = True
+    model_config = {
+        "from_attributes": True
+    }
 
 class PolicyAssignment(PolicyAssignmentInDB):
     """Schema for PolicyAssignment response."""
@@ -107,8 +107,9 @@ class PolicyResponse(PolicyBase):
     updated_at: datetime
     created_by: int
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
 
 class PolicyTestRequest(BaseModel):
     policy_id: int
@@ -135,8 +136,9 @@ class AttributeDefinitionResponse(AttributeDefinitionBase):
     created_at: datetime
     created_by: int
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
 
 class AttributeValueBase(BaseModel):
     attribute_id: int
@@ -154,8 +156,9 @@ class AttributeValueResponse(AttributeValueBase):
     updated_at: datetime
     created_by: int
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
 
 class AccessDecisionLogResponse(BaseModel):
     id: int
@@ -173,5 +176,6 @@ class AccessDecisionLogResponse(BaseModel):
     location: Optional[Dict[str, Any]]
     device_info: Optional[Dict[str, Any]]
 
-    class Config:
-        orm_mode = True 
+    model_config = {
+        "from_attributes": True
+    } 

@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
+from typing import Dict, Any, List
 
-from app.api.dependencies.auth import get_current_user
-from app.api.dependencies.db import get_db
+from app.api.dependencies import get_current_user, get_db
 from app.models.user import User
 from app.schemas.mfa import (
     MFAEnrollResponse,
@@ -22,11 +21,17 @@ async def enroll_mfa(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Enroll a user in MFA.
-    This endpoint generates a TOTP secret, QR code, and backup codes.
-    The user must verify the TOTP token before MFA is enabled.
+    Enroll user in MFA.
+    Returns secret, QR code, and backup codes.
     """
     mfa_service = MFAService(db)
+    
+    if current_user.mfa_enabled:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="MFA is already enabled"
+        )
+    
     secret, qr_code, backup_codes = await mfa_service.enroll_mfa(current_user.id)
     
     return MFAEnrollResponse(
@@ -42,21 +47,33 @@ async def verify_mfa(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Verify a TOTP token for MFA.
-    On first successful verification, MFA is enabled for the user.
+    Verify MFA code and enable MFA for user.
     """
     mfa_service = MFAService(db)
-    is_valid = await mfa_service.verify_mfa(current_user.id, request.token)
+    
+    if current_user.mfa_enabled:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="MFA is already enabled"
+        )
+    
+    is_valid = await mfa_service.verify_mfa(
+        current_user.id,
+        request.code,
+        request.secret
+    )
     
     if not is_valid:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid MFA token"
+            detail="Invalid verification code"
         )
     
+    await mfa_service.enable_mfa(current_user.id)
+    
     return MFAVerifyResponse(
-        is_valid=True,
-        mfa_enabled=True
+        enabled=True,
+        message="MFA enabled successfully"
     )
 
 @router.post("/verify-backup", response_model=MFAVerifyResponse)
@@ -66,11 +83,14 @@ async def verify_backup_code(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Verify a backup code for MFA recovery.
-    Backup codes are single-use and are marked as used after verification.
+    Verify backup code and enable MFA for user.
     """
     mfa_service = MFAService(db)
-    is_valid = await mfa_service.verify_backup_code(current_user.id, request.code)
+    
+    is_valid = await mfa_service.verify_backup_code(
+        current_user.id,
+        request.code
+    )
     
     if not is_valid:
         raise HTTPException(
@@ -79,8 +99,20 @@ async def verify_backup_code(
         )
     
     return MFAVerifyResponse(
-        is_valid=True,
-        mfa_enabled=True
+        enabled=True,
+        message="Backup code verified successfully"
+    )
+
+@router.get("/status", response_model=MFAStatusResponse)
+async def get_mfa_status(
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get MFA status for current user.
+    """
+    return MFAStatusResponse(
+        enabled=current_user.mfa_enabled,
+        methods=["totp"] if current_user.mfa_enabled else []
     )
 
 @router.post("/disable")
@@ -89,29 +121,16 @@ async def disable_mfa(
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Disable MFA for a user.
-    This endpoint deletes the MFA secret and all backup codes.
+    Disable MFA for current user.
     """
     mfa_service = MFAService(db)
+    
+    if not current_user.mfa_enabled:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="MFA is not enabled"
+        )
+    
     await mfa_service.disable_mfa(current_user.id)
     
-    return {"message": "MFA disabled successfully"}
-
-@router.get("/status", response_model=MFAStatusResponse)
-async def get_mfa_status(
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
-):
-    """
-    Get the current MFA status for a user.
-    Returns whether MFA is enabled, enrollment date, verification date,
-    and number of remaining backup codes.
-    """
-    mfa_service = MFAService(db)
-    status = await mfa_service.get_mfa_status(current_user.id)
-    remaining_codes = await mfa_service.get_remaining_backup_codes(current_user.id)
-    
-    return MFAStatusResponse(
-        **status,
-        remaining_backup_codes=remaining_codes
-    ) 
+    return {"message": "MFA disabled successfully"} 
