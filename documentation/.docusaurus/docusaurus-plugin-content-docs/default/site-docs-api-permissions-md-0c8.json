@@ -1,0 +1,27 @@
+{
+  "id": "api/permissions",
+  "title": "Permissions API",
+  "description": "The Permissions API allows managing permission definitions in AzureShield IAM.",
+  "source": "@site/docs/api/permissions.md",
+  "sourceDirName": "api",
+  "slug": "/api/permissions",
+  "permalink": "/docs/api/permissions",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/docs/api/permissions.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "sidebar_position": 6
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Roles API",
+    "permalink": "/docs/api/roles"
+  },
+  "next": {
+    "title": "RBAC API",
+    "permalink": "/docs/api/rbac"
+  }
+}

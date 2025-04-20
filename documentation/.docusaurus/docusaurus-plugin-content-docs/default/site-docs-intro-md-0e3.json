@@ -1,0 +1,23 @@
+{
+  "id": "intro",
+  "title": "AzureShield IAM Introduction",
+  "description": "Welcome to the AzureShield IAM documentation. This guide will help you understand, install, and use the AzureShield IAM platform.",
+  "source": "@site/docs/intro.md",
+  "sourceDirName": ".",
+  "slug": "/intro",
+  "permalink": "/docs/intro",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/docs/intro.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1
+  },
+  "sidebar": "tutorialSidebar",
+  "next": {
+    "title": "About AzureShield IAM",
+    "permalink": "/docs/about"
+  }
+}

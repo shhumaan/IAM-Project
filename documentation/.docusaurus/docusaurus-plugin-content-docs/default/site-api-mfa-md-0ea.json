@@ -1,0 +1,27 @@
+{
+  "id": "api/mfa",
+  "title": "Multi-Factor Authentication API",
+  "description": "This section documents the API endpoints for setting up and managing multi-factor authentication.",
+  "source": "@site/api/mfa.md",
+  "sourceDirName": "api",
+  "slug": "/api/mfa",
+  "permalink": "/docs/api/mfa",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/api/mfa.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Authentication API",
+    "permalink": "/docs/api/authentication"
+  },
+  "next": {
+    "title": "Authorization API",
+    "permalink": "/docs/api/authorization"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "api/roles",
+  "title": "Roles API",
+  "description": "The Roles API allows managing role definitions and assignments in AzureShield IAM.",
+  "source": "@site/api/roles.md",
+  "sourceDirName": "api",
+  "slug": "/api/roles",
+  "permalink": "/docs/api/roles",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/api/roles.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "sidebar_position": 5
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Users API",
+    "permalink": "/docs/api/users"
+  },
+  "next": {
+    "title": "Permissions API",
+    "permalink": "/docs/api/permissions"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/docs",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/docs",
+          "mainDocId": "intro",
+          "docs": [
+            {
+              "id": "about",
+              "path": "/docs/about",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/abac",
+              "path": "/docs/api/abac",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/audit",
+              "path": "/docs/api/audit",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/authentication",
+              "path": "/docs/api/authentication",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/authorization",
+              "path": "/docs/api/authorization",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/index",
+              "path": "/docs/api/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/mfa",
+              "path": "/docs/api/mfa",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/monitoring",
+              "path": "/docs/api/monitoring",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/permissions",
+              "path": "/docs/api/permissions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/policies",
+              "path": "/docs/api/policies",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/rbac",
+              "path": "/docs/api/rbac",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/roles",
+              "path": "/docs/api/roles",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "api/users",
+              "path": "/docs/api/users",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "architecture/index",
+              "path": "/docs/architecture/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "installation/docker-deployment",
+              "path": "/docs/installation/docker-deployment",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "installation/index",
+              "path": "/docs/installation/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "installation/local-development",
+              "path": "/docs/installation/local-development",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "installation/production-deployment",
+              "path": "/docs/installation/production-deployment",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "intro",
+              "path": "/docs/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "troubleshooting",
+              "path": "/docs/troubleshooting",
+              "sidebar": "tutorialSidebar"
+            }
+          ],
+          "draftIds": [],
+          "sidebars": {
+            "tutorialSidebar": {
+              "link": {
+                "path": "/docs/intro",
+                "label": "Introduction"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

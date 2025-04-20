@@ -1,0 +1,27 @@
+{
+  "id": "api/rbac",
+  "title": "RBAC API",
+  "description": "The RBAC (Role-Based Access Control) API allows managing role-based access control configurations.",
+  "source": "@site/docs/api/rbac.md",
+  "sourceDirName": "api",
+  "slug": "/api/rbac",
+  "permalink": "/docs/api/rbac",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/docs/api/rbac.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "sidebar_position": 7
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Permissions API",
+    "permalink": "/docs/api/permissions"
+  },
+  "next": {
+    "title": "ABAC API",
+    "permalink": "/docs/api/abac"
+  }
+}

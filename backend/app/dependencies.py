@@ -12,6 +12,9 @@ from app.db.session import AsyncSessionLocal, get_db as session_get_db
 from app.models.user import User
 from app.schemas.token import TokenPayload
 
+# Use the session get_db for consistency
+get_db = session_get_db
+
 # OAuth2 scheme for token authentication
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
 
@@ -60,7 +63,4 @@ async def get_current_active_superuser(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="The user doesn't have enough privileges",
         )
-    return current_user
-
-# Use the session get_db for consistency
-get_db = session_get_db 
+    return current_user 

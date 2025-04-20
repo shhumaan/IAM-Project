@@ -1,0 +1,27 @@
+{
+  "id": "installation/docker-deployment",
+  "title": "Docker Deployment",
+  "description": "This guide explains how to deploy AzureShield IAM using Docker Compose for a streamlined setup.",
+  "source": "@site/docs/installation/docker-deployment.md",
+  "sourceDirName": "installation",
+  "slug": "/installation/docker-deployment",
+  "permalink": "/docs/installation/docker-deployment",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/docs/installation/docker-deployment.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Local Development Setup",
+    "permalink": "/docs/installation/local-development"
+  },
+  "next": {
+    "title": "Production Deployment",
+    "permalink": "/docs/installation/production-deployment"
+  }
+}

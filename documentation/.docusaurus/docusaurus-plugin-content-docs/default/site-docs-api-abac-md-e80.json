@@ -1,0 +1,27 @@
+{
+  "id": "api/abac",
+  "title": "ABAC API",
+  "description": "The ABAC (Attribute-Based Access Control) API allows managing attribute-based access control configurations.",
+  "source": "@site/docs/api/abac.md",
+  "sourceDirName": "api",
+  "slug": "/api/abac",
+  "permalink": "/docs/api/abac",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/docs/api/abac.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "sidebar_position": 8
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "RBAC API",
+    "permalink": "/docs/api/rbac"
+  },
+  "next": {
+    "title": "Policies API",
+    "permalink": "/docs/api/policies"
+  }
+}

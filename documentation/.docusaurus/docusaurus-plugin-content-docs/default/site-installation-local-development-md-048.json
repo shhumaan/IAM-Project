@@ -1,0 +1,27 @@
+{
+  "id": "installation/local-development",
+  "title": "Local Development Setup",
+  "description": "This guide will walk you through setting up AzureShield IAM for local development.",
+  "source": "@site/installation/local-development.md",
+  "sourceDirName": "installation",
+  "slug": "/installation/local-development",
+  "permalink": "/docs/installation/local-development",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/installation/local-development.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Installation Guide",
+    "permalink": "/docs/installation/"
+  },
+  "next": {
+    "title": "Docker Deployment",
+    "permalink": "/docs/installation/docker-deployment"
+  }
+}

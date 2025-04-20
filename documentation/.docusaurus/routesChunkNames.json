@@ -1,0 +1,145 @@
+{
+  "/__docusaurus/debug-5ff": {
+    "__comp": "__comp---theme-debug-config-23-a-2ff",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    }
+  },
+  "/__docusaurus/debug/config-5ba": {
+    "__comp": "__comp---theme-debug-config-23-a-2ff",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    }
+  },
+  "/__docusaurus/debug/content-a2b": {
+    "__comp": "__comp---theme-debug-contentba-8-ce7",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    },
+    "__props": "__props---docusaurus-debug-content-3-c-0-be2"
+  },
+  "/__docusaurus/debug/globalData-c3c": {
+    "__comp": "__comp---theme-debug-global-dataede-0fa",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    }
+  },
+  "/__docusaurus/debug/metadata-156": {
+    "__comp": "__comp---theme-debug-site-metadata-68-e-3d4",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    }
+  },
+  "/__docusaurus/debug/registry-88c": {
+    "__comp": "__comp---theme-debug-registry-679-501",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    }
+  },
+  "/__docusaurus/debug/routes-000": {
+    "__comp": "__comp---theme-debug-routes-946-699",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    }
+  },
+  "/docs-a4a": {
+    "__comp": "__comp---theme-docs-root-5-e-9-0b6",
+    "__context": {
+      "plugin": "plugin---docsaba-d7c"
+    }
+  },
+  "/docs-529": {
+    "__comp": "__comp---theme-doc-version-roota-7-b-5de",
+    "__props": "__props---docs-005-788"
+  },
+  "/docs-088": {
+    "__comp": "__comp---theme-doc-roota-94-67a"
+  },
+  "/docs/about-97c": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-about-3-d-8-538"
+  },
+  "/docs/api/-5e5": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-api-5-e-8-853"
+  },
+  "/docs/api/abac-dcc": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-api-abace-80-df2"
+  },
+  "/docs/api/audit-984": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-api-audita-50-3b3"
+  },
+  "/docs/api/authentication-733": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-api-authenticationbae-2fb"
+  },
+  "/docs/api/authorization-13c": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-api-authorization-191-cc3"
+  },
+  "/docs/api/mfa-be4": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-api-mfa-6-f-6-b29"
+  },
+  "/docs/api/monitoring-826": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-api-monitoringa-88-b5e"
+  },
+  "/docs/api/permissions-bd4": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-api-permissions-0-c-8-870"
+  },
+  "/docs/api/policies-8b7": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-api-policiesa-96-c12"
+  },
+  "/docs/api/rbac-337": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-api-rbaca-1-a-683"
+  },
+  "/docs/api/roles-ba5": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-api-roles-897-acd"
+  },
+  "/docs/api/users-31c": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-api-users-63-b-2cf"
+  },
+  "/docs/architecture/-178": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-architecture-dc-7-6e5"
+  },
+  "/docs/installation/-dbe": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-installation-660-ed2"
+  },
+  "/docs/installation/docker-deployment-4e8": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-installation-docker-deployment-7-d-2-694"
+  },
+  "/docs/installation/local-development-58c": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-installation-local-developmentedf-27b"
+  },
+  "/docs/installation/production-deployment-c7d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-installation-production-deployment-1-e-7-457"
+  },
+  "/docs/intro-61d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-intro-0-e-3-be1"
+  },
+  "/docs/troubleshooting-e02": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docs-troubleshooting-9-d-9-0bf"
+  },
+  "/-2e1": {
+    "__comp": "__comp---site-src-pages-index-jsc-4-f-f99",
+    "__context": {
+      "plugin": "plugin---a-74-9d6"
+    },
+    "config": "config---5-e-9-4f3"
+  }
+}

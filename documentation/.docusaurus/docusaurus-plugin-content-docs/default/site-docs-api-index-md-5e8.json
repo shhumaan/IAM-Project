@@ -1,0 +1,27 @@
+{
+  "id": "api/index",
+  "title": "API Documentation",
+  "description": "AzureShield IAM provides a comprehensive RESTful API for integrating with the platform. This section documents the available endpoints, request formats, and response examples.",
+  "source": "@site/docs/api/index.md",
+  "sourceDirName": "api",
+  "slug": "/api/",
+  "permalink": "/docs/api/",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/docs/api/index.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "sidebar_position": 5
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Troubleshooting",
+    "permalink": "/docs/troubleshooting"
+  },
+  "next": {
+    "title": "Authentication API",
+    "permalink": "/docs/api/authentication"
+  }
+}

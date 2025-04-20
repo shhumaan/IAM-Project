@@ -1,0 +1,27 @@
+{
+  "id": "architecture/index",
+  "title": "Architecture Overview",
+  "description": "This section describes the architecture of AzureShield IAM, including its components, interactions, and design principles.",
+  "source": "@site/docs/architecture/index.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/",
+  "permalink": "/docs/architecture/",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/docs/architecture/index.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Production Deployment",
+    "permalink": "/docs/installation/production-deployment"
+  },
+  "next": {
+    "title": "Troubleshooting",
+    "permalink": "/docs/troubleshooting"
+  }
+}

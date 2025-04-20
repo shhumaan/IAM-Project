@@ -1,0 +1,27 @@
+{
+  "id": "troubleshooting",
+  "title": "Troubleshooting Guide",
+  "description": "This guide provides solutions to common issues you might encounter when working with AzureShield IAM.",
+  "source": "@site/docs/troubleshooting.md",
+  "sourceDirName": ".",
+  "slug": "/troubleshooting",
+  "permalink": "/docs/troubleshooting",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/docs/troubleshooting.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "sidebar_position": 4
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Architecture",
+    "permalink": "/docs/architecture/"
+  },
+  "next": {
+    "title": "API Documentation",
+    "permalink": "/docs/api/"
+  }
+}

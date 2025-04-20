@@ -1,0 +1,27 @@
+{
+  "id": "api/policies",
+  "title": "Policies API",
+  "description": "The Policies API allows managing advanced access control policies.",
+  "source": "@site/api/policies.md",
+  "sourceDirName": "api",
+  "slug": "/api/policies",
+  "permalink": "/docs/api/policies",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/api/policies.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 9,
+  "frontMatter": {
+    "sidebar_position": 9
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "ABAC API",
+    "permalink": "/docs/api/abac"
+  },
+  "next": {
+    "title": "Audit Logs API",
+    "permalink": "/docs/api/audit"
+  }
+}

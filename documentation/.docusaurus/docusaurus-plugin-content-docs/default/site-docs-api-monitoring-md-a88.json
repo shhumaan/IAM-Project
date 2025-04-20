@@ -1,0 +1,23 @@
+{
+  "id": "api/monitoring",
+  "title": "Monitoring API",
+  "description": "The Monitoring API allows accessing system health and performance metrics.",
+  "source": "@site/docs/api/monitoring.md",
+  "sourceDirName": "api",
+  "slug": "/api/monitoring",
+  "permalink": "/docs/api/monitoring",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/docs/api/monitoring.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 11,
+  "frontMatter": {
+    "sidebar_position": 11
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Audit Logs API",
+    "permalink": "/docs/api/audit"
+  }
+}

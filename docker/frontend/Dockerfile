@@ -14,13 +14,13 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy package files
-COPY frontend/package*.json ./
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy project files
-COPY frontend/ .
+COPY . .
 
 # Create non-root user
 RUN useradd -m appuser && chown -R appuser:appuser /app

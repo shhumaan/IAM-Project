@@ -1,0 +1,27 @@
+{
+  "id": "api/authentication",
+  "title": "Authentication API",
+  "description": "The Authentication API handles user login, token refresh, logout, and password reset operations.",
+  "source": "@site/api/authentication.md",
+  "sourceDirName": "api",
+  "slug": "/api/authentication",
+  "permalink": "/docs/api/authentication",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/api/authentication.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "API Documentation",
+    "permalink": "/docs/api/"
+  },
+  "next": {
+    "title": "Multi-Factor Authentication API",
+    "permalink": "/docs/api/mfa"
+  }
+}

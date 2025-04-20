@@ -1,0 +1,27 @@
+{
+  "id": "installation/index",
+  "title": "Installation Guide",
+  "description": "This section covers different ways to set up and run the AzureShield IAM platform.",
+  "source": "@site/installation/index.md",
+  "sourceDirName": "installation",
+  "slug": "/installation/",
+  "permalink": "/docs/installation/",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/installation/index.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Introduction",
+    "permalink": "/docs/intro"
+  },
+  "next": {
+    "title": "Local Development Setup",
+    "permalink": "/docs/installation/local-development"
+  }
+}

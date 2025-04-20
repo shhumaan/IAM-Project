@@ -13,6 +13,16 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/azureshield_iam
       - REDIS_URL=redis://redis:6379/0
       - LOG_LEVEL=DEBUG
+      - POSTGRES_SERVER=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=azureshield_iam
+      - SECRET_KEY=your_secret_key_here_change_this_in_production
+      - SMTP_HOST=mailhog
+      - SMTP_USER=user
+      - SMTP_PASSWORD=password
+      - EMAILS_FROM_EMAIL=noreply@azureshield.com
+      - EMAILS_FROM_NAME=AzureShield
     depends_on:
       db:
         condition: service_healthy
@@ -90,7 +100,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - redis_data:/data
     networks:

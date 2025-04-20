@@ -1,0 +1,27 @@
+{
+  "id": "api/users",
+  "title": "Users API",
+  "description": "The Users API allows managing user accounts in the AzureShield IAM system.",
+  "source": "@site/api/users.md",
+  "sourceDirName": "api",
+  "slug": "/api/users",
+  "permalink": "/docs/api/users",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/api/users.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "sidebar_position": 4
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Authorization API",
+    "permalink": "/docs/api/authorization"
+  },
+  "next": {
+    "title": "Roles API",
+    "permalink": "/docs/api/roles"
+  }
+}

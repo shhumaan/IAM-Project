@@ -1,0 +1,27 @@
+{
+  "id": "api/authorization",
+  "title": "Authorization API",
+  "description": "The Authorization API allows checking permissions and evaluating access policies dynamically.",
+  "source": "@site/docs/api/authorization.md",
+  "sourceDirName": "api",
+  "slug": "/api/authorization",
+  "permalink": "/docs/api/authorization",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/your-org/azure-shield-iam/tree/main/documentation/docs/api/authorization.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Multi-Factor Authentication API",
+    "permalink": "/docs/api/mfa"
+  },
+  "next": {
+    "title": "Users API",
+    "permalink": "/docs/api/users"
+  }
+}

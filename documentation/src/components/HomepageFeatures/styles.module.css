@@ -1,0 +1,24 @@
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+  background-color: var(--ifm-color-background);
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.section:nth-child(even) {
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.featureSvg {
+  height: 200px;
+  width: 200px;
+} 
